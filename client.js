@@ -1,17 +1,32 @@
-
 window.TrelloPowerUp.initialize({
-  'card-badges': function (t, options) {
-    return t.card('checklists.checkItems').then(card => {
-      const sum = calculateSum(card.checklists);
+  'card-badges': async function (t, options) {
+    try {
+      const card = await t.card('id', 'checklists');
 
-      // 👉 nur anzeigen wenn > 0
-      if (sum <= 0) return [];
+      let total = 0;
+
+      for (const checklist of card.checklists) {
+        const items = await t.get(checklist:${checklist.id}, 'shared', 'checkItems');
+
+        if (!items) continue;
+
+        items.forEach(item => {
+          const value = extractNumber(item.name);
+          if (value !== null) total += value;
+        });
+      }
+
+      if (total <= 0) return [];
 
       return [{
-        text: formatCurrency(sum),
+        text: formatCurrency(total),
         color: 'green'
       }];
-    });
+
+    } catch (err) {
+      console.error(err);
+      return [];
+    }
   }
 });
 
