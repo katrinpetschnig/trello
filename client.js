@@ -2,11 +2,12 @@ window.TrelloPowerUp.initialize({
   'card-badges': function (t, options) {
     return t.card('checklists').then(card => {
       const sum = calculateSum(card.checklists);
-
-      return [{
+    const display = [{
         text: sum + ' €',
         color: 'green'
       }];
+
+      return sum ? display : [];
     });
   }
 });
@@ -16,12 +17,14 @@ function calculateSum(checklists) {
   let total = 0;
 
   checklists.forEach(checklist => {
-    checklist.checkItems.forEach(item => {
-      const value = extractNumber(item.name);
-      if (value !== null) {
-        total += value;
-      }
-    });
+    if (checklist.checkItems) {
+        checklist.checkItems.forEach(item => {
+        const value = extractNumber(item.name);
+        if (value !== null) {
+            total += value;
+        }
+        });
+    }
   });
 
   return total.toFixed(2);
