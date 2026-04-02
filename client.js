@@ -32,7 +32,7 @@ async function fetchCheckItems(checklistId) {
   const key = '6ff2295627856e2ed47fd2309aa985335a5b36014ec4490031d8122a1fbcb4a2';
   const token = 'c41f170272652b42c8af1a9670473cd5';
 
-  const url = https://api.trello.com/1/checklists/${checklistId}/checkItems?key=${key}&token=${token};
+  const url = 'https://api.trello.com/1/checklists/' + checklistId + '/checkItems?key=' + key + '&token=' + token;
 
   const response = await fetch(url);
   return await response.json();
