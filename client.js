@@ -1,33 +1,40 @@
+
 window.TrelloPowerUp.initialize({
   'card-badges': function (t, options) {
-    return t.card('checklists').then(card => {
+    return t.card('checklists.checkItems').then(card => {
       const sum = calculateSum(card.checklists);
-    const display = [{
-        text: sum + ' €',
+
+      // 👉 nur anzeigen wenn > 0
+      if (sum <= 0) return [];
+
+      return [{
+        text: formatCurrency(sum),
         color: 'green'
       }];
-
-      return sum ? display : [];
     });
   }
 });
 
-// 🔢 Summenlogik
+function formatCurrency(value) {
+  return value.toLocaleString('de-DE', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }) + ' €';
+}
+
 function calculateSum(checklists) {
   let total = 0;
 
   checklists.forEach(checklist => {
-    if (checklist.checkItems) {
-        checklist.checkItems.forEach(item => {
-        const value = extractNumber(item.name);
-        if (value !== null) {
-            total += value;
-        }
-        });
-    }
+    checklist.checkItems.forEach(item => {
+      const value = extractNumber(item.name);
+      if (value !== null) {
+        total += value;
+      }
+    });
   });
 
-  return total.toFixed(2);
+  return total;
 }
 
 // 🔍 Zahl am Anfang erkennen
