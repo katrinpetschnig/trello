@@ -1,4 +1,30 @@
 window.TrelloPowerUp.initialize({
+  'card-badges': function (t, options) {
+    return t.card({
+      checklists: {
+        checkItems: true
+      }
+    }).then(card => {
+
+      let total = 0;
+
+      card.checklists.forEach(checklist => {
+        checklist.checkItems.forEach(item => {
+          const value = extractNumber(item.name);
+          if (value !== null) total += value;
+        });
+      });
+
+      if (total <= 0) return [];
+
+      return [{
+        text: formatCurrency(total),
+        color: 'green'
+      }];
+    });
+  }
+});
+/*window.TrelloPowerUp.initialize({
   'card-badges': async function (t, options) {
     try {
       const card = await t.card('id', 'checklists');
@@ -28,7 +54,7 @@ window.TrelloPowerUp.initialize({
       return [];
     }
   }
-});
+});*/
 
 function formatCurrency(value) {
   return value.toLocaleString('de-DE', {
