@@ -6,7 +6,7 @@ window.TrelloPowerUp.initialize({
       let total = 0;
 
       for (const checklist of card.checklists) {
-        const items = await t.get(checklist:${checklist.id}, 'shared', 'checkItems');
+        const items = await t.get('checklist:' + checklist.id, 'shared', 'checkItems');
 
         if (!items) continue;
 
