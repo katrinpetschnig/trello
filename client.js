@@ -1,14 +1,12 @@
 window.TrelloPowerUp.initialize({
   'card-badges': async function (t, options) {
     try {
-      const card = await t.card('id', 'checklists',  'checkItems');
+      const card = await t.card('id', 'checklists');
 
       let total = 0;
 
       for (const checklist of card.checklists) {
-        const items = await t.get('checklist:' + checklist.id, 'shared', 'checkItems');
-
-        if (!items) continue;
+        const items = await fetchCheckItems(checklist.id);
 
         items.forEach(item => {
           const value = extractNumber(item.name);
@@ -23,12 +21,22 @@ window.TrelloPowerUp.initialize({
         color: 'green'
       }];
 
-    } catch (err) {
-      console.error(err);
+    } catch (e) {
+      console.error(e);
       return [];
     }
   }
 });
+
+async function fetchCheckItems(checklistId) {
+  const key = '6ff2295627856e2ed47fd2309aa985335a5b36014ec4490031d8122a1fbcb4a2';
+  const token = 'c41f170272652b42c8af1a9670473cd5';
+
+  const url = https://api.trello.com/1/checklists/${checklistId}/checkItems?key=${key}&token=${token};
+
+  const response = await fetch(url);
+  return await response.json();
+}
 
 function formatCurrency(value) {
   return value.toLocaleString('de-DE', {
